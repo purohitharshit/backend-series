@@ -1,11 +1,16 @@
 import dotenv from "dotenv";
 import connectDB from "./db/index.js";
 import express from "express";
+import { app } from "./app.js";
 
-const app = express();
+// const app = express();
+
+// app.get("/", (req, res) => {
+//   res.send("sdf");
+// });
 
 dotenv.config({
-  path: "./env",
+  path: "./.env",
 });
 
 // 2nd approach to connect DB - make a separate file in 'db' folder and write the logic there and then call the function here in index.js
