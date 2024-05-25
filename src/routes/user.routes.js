@@ -7,10 +7,25 @@ const router = Router();
 // middleware is injected just before passing the controller
 // router.route("/register").post(middleware, registerUser);
 
+//wrong code which was leading to error due to "Avatar"
+// router.route("/register").post(
+//   upload.fields([
+//     {
+//       name: "Avatar",
+//       maxCount: 1,
+//     },
+//     {
+//       name: "coverImage",
+//       maxCount: 1,
+//     },
+//   ]),
+//   registerUser
+// );
+
 router.route("/register").post(
   upload.fields([
     {
-      name: "Avatar",
+      name: "avatar",
       maxCount: 1,
     },
     {

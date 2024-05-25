@@ -23,15 +23,17 @@ const registerUser = asyncHandler(async (req, res) => {
   // return res
 
   const { fullName, username, email, password } = req.body;
-  console.log("email: ", email);
-  console.log("pwd ", password);
+  console.log(req.body);
+  // console.log(fullName);
+  // console.log("email: ", email);
+  // console.log("pwd ", password);
 
   if (fullName === "" || username === "" || email === "" || password === "") {
     throw new ApiError(400, "This field is requried");
   }
 
   //if any one of 'username' or 'email' matches with the values present in DB
-  const existedUser = User.findOne({
+  const existedUser = await User.findOne({
     $or: [{ username }, { email }],
   });
 
@@ -41,7 +43,19 @@ const registerUser = asyncHandler(async (req, res) => {
 
   // 'files' method on 'req' is given by multer
   const avatarLocalPath = req.files?.avatar[0]?.path;
-  const coverImageLocalPath = req.files?.coverImage[0]?.path;
+  console.log(req.files);
+
+  //if user fo not pass cover image, we will get error of "undefined objects". so to handle the condition when user do not upload/pass coverimage
+  // const coverImageLocalPath = req.files?.coverImage[0]?.path;   // this will throw error as mentioned above
+
+  let coverImageLocalPath;
+  if (
+    req.files &&
+    Array.isArray(req.files.coverImage) &&
+    req.files.coverImage.length > 0
+  ) {
+    coverImageLocalPath = req.files.coverImage[0].path;
+  }
 
   //avatar file is required
   if (!avatarLocalPath) {
@@ -56,7 +70,7 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   //object creation
-  const user = User.create({
+  const user = await User.create({
     fullName,
     avatar: avatar.url,
     coverImage: coverImage?.url || "",
